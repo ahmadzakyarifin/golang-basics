@@ -1,0 +1,3 @@
+=== LAPORAN FINAL BANK ===
+Total Saldo: Rp750.000
+Status: SELESAI
