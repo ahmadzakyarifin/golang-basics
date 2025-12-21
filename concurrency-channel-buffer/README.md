@@ -90,6 +90,40 @@ Saat menjalankan program, Anda mungkin melihat urutan laporan penyelesaian yang 
 > **Kesimpulan**: Terminal hanya melaporkan hasil akhir dari sebuah kompetisi lari. Meskipun laporannya muncul satu-satu, kenyataannya semua pelari (Kasir) sedang berada di lintasan secara bersamaan dan saling salip-menyalip di setiap meternya.
 ---
 
+## ⚖️ Skenario Penggunaan: Mutex & Channel di Dunia Nyata
+
+Dalam dunia *concurrency*, hubungan antara Pengirim (Producer) dan Penerima (Consumer) bisa sangat fleksibel. Berikut adalah 3 skenario utama:
+
+### 1. Many-to-One (Banyak ke Satu) - *Paling Umum*
+Ini adalah skenario project Bank kita: **Banyak Kasir -> Satu Petugas**.
+* **Penggunaan**: Mengumpulkan laporan transaksi dari banyak kasir ke satu file log atau satu total saldo.
+* **Kekuatan Channel**: Sangat efisien karena semua pengirim melempar ke satu pipa yang sama, dan satu petugas menangkapnya secara teratur.
+
+
+
+### 2. One-to-Many (Satu ke Banyak) - *Distribusi Tugas*
+Bayangkan ada 1 Bos yang punya 1.000 tugas, dan dia punya 5 Karyawan.
+* **Mekanisme**: Bos melempar tugas ke dalam pipa, lalu 5 karyawan "berebutan" mengambil tugas dari pipa tersebut. Siapa yang sedang menganggur, dia yang kerja.
+* **Kekuatan Channel**: Go secara otomatis membagi beban kerja secara adil tanpa perlu kita atur manual.
+
+
+
+### 3. Many-to-Many (Banyak ke Banyak)
+Skenario di mana banyak Nasabah melakukan transaksi dan banyak Petugas Bank yang melayani sekaligus.
+* **Mekanisme**: Ada satu pipa besar di mana banyak orang melempar data dan banyak orang mengambil data.
+* **Keamanan Otomatis**: Go menjamin bahwa **satu pesan hanya akan diambil oleh satu penerima**. Tidak akan ada dua petugas yang memproses satu transaksi yang sama.
+
+
+
+---
+
+## 💡 Kesimpulan: Mutex atau Channel?
+
+| Situasi | Gunakan Mutex Jika... | Gunakan Channel Jika... |
+| :--- | :--- | :--- |
+| **Fokus Utama** | Menjaga **Data** (State) agar tidak rusak. | Mengalirkan **Tugas** (Workflow) antar proses. |
+| **Interaksi** | Banyak orang rebutan satu benda yang sama. | Data perlu berpindah tangan dari A ke B. |
+| **Filosofi** | "Jangan biarkan orang lain menyentuh buku ini." | "Berikan data ini ke petugas berikutnya." |
 
 ## 🚀 Kesimpulan Filosofis
 **"Don't communicate by sharing memory, share memory by communicating."**
